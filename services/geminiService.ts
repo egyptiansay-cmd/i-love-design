@@ -1,4 +1,27 @@
+
 import { GoogleGenAI, Modality } from "@google/genai";
+
+const getApiKey = (): string => {
+  // 1. Try Vite (Production)
+  try {
+    // @ts-ignore
+    if (import.meta.env && import.meta.env.VITE_API_KEY) {
+      // @ts-ignore
+      return import.meta.env.VITE_API_KEY;
+    }
+  } catch (e) {}
+
+  // 2. Try Standard Env (Development/Builder/Preview)
+  try {
+     // @ts-ignore
+     if (process.env.API_KEY) {
+       // @ts-ignore
+       return process.env.API_KEY;
+     }
+  } catch (e) {}
+
+  return "";
+};
 
 const compressImage = async (file: File, aggressive: boolean = false): Promise<{ data: string; mimeType: string }> => {
   // Stricter limits if aggressive mode is on (e.g. for dual image uploads)
@@ -106,7 +129,11 @@ const getEnhancePrompt = (style: string, quality: string, model: string): string
 }
 
 export const enhanceImage = async (imageFile: File, style: string, quality: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
 
   const imagePart = await fileToGenerativePart(imageFile);
   const prompt = getEnhancePrompt(style, quality, 'realesrgan');
@@ -164,7 +191,11 @@ const getExpandPrompt = (userPrompt: string, aspectRatio: string, quality: strin
 }
 
 export const expandImage = async (imageFile: File, userPrompt: string, aspectRatio: string = 'original', quality: string = '8k'): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
 
   const imagePart = await fileToGenerativePart(imageFile);
   const prompt = getExpandPrompt(userPrompt, aspectRatio, quality);
@@ -241,7 +272,11 @@ const getRemoveBackgroundPrompt = (mode: string, customPrompt: string, enhanceSu
 }
 
 export const removeBackground = async (imageFile: File, mode: string = 'strict', customPrompt: string = '', enhanceSubject: boolean = false): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
 
   const imagePart = await fileToGenerativePart(imageFile);
   const prompt = getRemoveBackgroundPrompt(mode, customPrompt, enhanceSubject);
@@ -298,7 +333,11 @@ Task: Analyze the input subject and composite it into a professional advertiseme
 };
 
 export const generateMockup = async (imageFile: File, theme: string, customPrompt: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
 
   const imagePart = await fileToGenerativePart(imageFile);
   const prompt = getMockupPrompt(theme, customPrompt);
@@ -329,7 +368,11 @@ export const generateMockup = async (imageFile: File, theme: string, customPromp
 };
 
 export const generateTemplateMerge = async (subjectFile: File, templateFile: File, mode: string, customPrompt: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
 
   // Use standard compression (aggressive=false) to get better quality details for blending
   const subjectPart = await fileToGenerativePart(subjectFile, false);
@@ -408,7 +451,11 @@ export const generateTemplateMerge = async (subjectFile: File, templateFile: Fil
 
 
 export const enhancePrompt = async (userPrompt: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+      throw new Error("API Key is missing. Please check your environment configuration.");
+  }
+  const ai = new GoogleGenAI({ apiKey });
   
   const systemInstruction = `You are a creative assistant and an expert prompt engineer. Output MUST be the prompt text only.`;
 
