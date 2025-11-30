@@ -20,7 +20,8 @@ const getApiKey = (): string => {
      }
   } catch (e) {}
 
-  return "";
+  // 3. Hardcoded Fallback
+  return "AIzaSyA0jI3203xWsOTYOM16T1ZNIm6XZSD00_M";
 };
 
 const compressImage = async (file: File, aggressive: boolean = false): Promise<{ data: string; mimeType: string }> => {
