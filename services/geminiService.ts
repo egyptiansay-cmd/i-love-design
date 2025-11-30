@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Modality } from "@google/genai";
 
 const compressImage = async (file: File, aggressive: boolean = false): Promise<{ data: string; mimeType: string }> => {
@@ -107,9 +106,6 @@ const getEnhancePrompt = (style: string, quality: string, model: string): string
 }
 
 export const enhanceImage = async (imageFile: File, style: string, quality: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const imagePart = await fileToGenerativePart(imageFile);
@@ -168,9 +164,6 @@ const getExpandPrompt = (userPrompt: string, aspectRatio: string, quality: strin
 }
 
 export const expandImage = async (imageFile: File, userPrompt: string, aspectRatio: string = 'original', quality: string = '8k'): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const imagePart = await fileToGenerativePart(imageFile);
@@ -248,9 +241,6 @@ const getRemoveBackgroundPrompt = (mode: string, customPrompt: string, enhanceSu
 }
 
 export const removeBackground = async (imageFile: File, mode: string = 'strict', customPrompt: string = '', enhanceSubject: boolean = false): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const imagePart = await fileToGenerativePart(imageFile);
@@ -308,9 +298,6 @@ Task: Analyze the input subject and composite it into a professional advertiseme
 };
 
 export const generateMockup = async (imageFile: File, theme: string, customPrompt: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const imagePart = await fileToGenerativePart(imageFile);
@@ -342,9 +329,6 @@ export const generateMockup = async (imageFile: File, theme: string, customPromp
 };
 
 export const generateTemplateMerge = async (subjectFile: File, templateFile: File, mode: string, customPrompt: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   // Use standard compression (aggressive=false) to get better quality details for blending
@@ -424,9 +408,6 @@ export const generateTemplateMerge = async (subjectFile: File, templateFile: Fil
 
 
 export const enhancePrompt = async (userPrompt: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not configured.");
-  }
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const systemInstruction = `You are a creative assistant and an expert prompt engineer. Output MUST be the prompt text only.`;
